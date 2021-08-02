@@ -1,17 +1,22 @@
 # For sample predict functions for popular libraries visit https://github.com/opendatahub-io/odh-prediction-samples
 
 # Import libraries
-# import tensorflow as tf
+import pandas as pd
+import cloudpickle as cp
+
 
 # Load your model.
-# model_dir = 'models/myfancymodel'
-# saved_model = tf.saved_model.load(model_dir)
-# predictor = saved_model.signatures['default']
+pipeline = cp.load(open('pipeline.pkl', 'rb'))
 
 
-# Write a predict function 
 def predict(args_dict):
-#     arg = args_dict.get('arg1')
-#     predictor(arg)
-    return {'prediction': 'not implemented'}
+
+    d = {'timestamp':0, 'label':0, 'user_id': args_dict.get('user_id'), 'amount': args_dict.get('amount'), 'merchant_id': args_dict.get('merchant_id'), 'trans_type': args_dict.get('trans_type'), 'foreign': args_dict.get('foreign'), 'interarrival': args_dict.get('interarrival')}
+    
+    df = pd.DataFrame(d, index=[0])
+    prediction = pipeline.predict(df)[0]
+
+    return {'prediction': prediction}
+
+
 
